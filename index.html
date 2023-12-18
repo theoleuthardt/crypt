@@ -1,0 +1,170 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+  <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
+  <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
+  <script language="javascript" type="text/javascript" src="crypt.js"></script>
+  <!-- OK, YOU CAN MAKE CHANGES BELOW THIS LINE AGAIN -->
+
+  <!-- This line removes any default padding and style.
+       You might only need one of these values set. -->
+</head>
+
+<body>
+
+
+<!-- Navigationsmenue -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Kryptologie</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Informationsquellen
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li><a class="dropdown-item" href="https://www.inf-schule.de/kryptologie" target="Informationsquellen">inf-schule | kryptologie</a></li>
+            <li><a class="dropdown-item" href="http://www.nord-com.net/h-g.mekelburg/krypto/algo.htme" target="Informationsquellen">Kryptologische Algorithmen in JS</a></li>
+            <li><a class="dropdown-item" href="https://de.wikipedia.org/wiki/Caesar-Verschlüsselung" target="Informationsquellen">Caesar</a></li>
+            <li><a class="dropdown-item" href="https://de.wikipedia.org/wiki/Vigenère-Chiffre#" target="Informationsquellen">Vigenère</a></li>
+            <li><a class="dropdown-item" href="https://de.wikipedia.org/wiki/RSA-Kryptosystem" target="Informationsquellen">RSA</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Crypt-Tool
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li><a class="dropdown-item" href="https://www.cryptool.org/de/cto/" target="Crypt-Tool">CrypTool-Online</a></li>
+            <li><a class="dropdown-item" href="https://www.cryptool.org/de/cto/caesar" target="Crypt-Tool">Caesar</a></li>
+            <li><a class="dropdown-item" href="https://www.cryptool.org/de/cto/vigenere" target="Crypt-Tool">Vigenère</a></li>
+            <li><a class="dropdown-item" href="https://www.cryptool.org/de/cto/rsa-step-by-step" target="Crypt-Tool">RSA-Steps</a></li>
+            <li><a class="dropdown-item" href="https://www.cryptool.org/de/cto/rsa-visual" target="Crypt-Tool">RSA-Visualisiert</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dokumentation
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li><a class="dropdown-item" href="out/index.html" target="Quelltext-Dokumentation">Quelltext-Dokumentation</a></li>
+            <li><a class="dropdown-item" href="docs/kryptographischerVerfahren.pdf">Historische Einordnung</a></li>
+            <li><a class="dropdown-item" href="docs/einfachKlassisch.pdf">Klassische Kryptographie I</a></li>
+            <li><a class="dropdown-item" href="docs/vigenereChiffrierung.pdf">Klassische Kryptographie II</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="download/crypt.zip">Download</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<!-- Darstellung der Benutzeroberfläche mithilfe von Bootstrap-->
+<div style="margin-top: 1em; padding: 1em">
+  <div class="row">
+
+    <div class="col-sm-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Klartext</h5>
+            <p class="card-text">
+              <textarea id="klartext" style="width: 100%; min-height: 10em; border-color: lightgray"></textarea>
+            </p>
+          </div>
+          <div class="card-footer bg-transparent border-light text-end">
+            <button type="button" id="encrypt" class="btn btn-outline-primary btn-sm">verschlüsseln</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="accordion" id="Verfahren">
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button id="caesar" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                CAESAR-Verschlüsselung (Verschiebung)
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-parent="#Verfahren">
+              <div class="accordion-body">
+                  <p align="center">
+                    <input type="range" min="-26" max="26" value="13" id="shift"><br />
+                    <label for="secret">Verschiebung um:</label> <span id="secret"></span>
+                  </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button id="vigenere" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Vigenère-Verschlüsselung
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#Verfahren">
+              <div class="accordion-body">
+                <p> 
+                  <input type="text" class="form-control form-control-sm" type="text" placeholder="Geben Sie den geheimen Schlüssel an" id="vigenereSecret">
+                </p> 
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button id="rsa" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                RSA-Verschlüsselung
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#Verfahren">
+              <div class="accordion-body">
+                <p> 
+                  Fehlt noch!
+                </p> 
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="card text-left">
+          <div class="card-body">
+            <h5 class="card-title">Chiffre</h5>
+            <p class="card-text">
+              <textarea id="chiffre" style="width: 100%; min-height: 10em; border-color: lightgray"></textarea> 
+            </p>
+          </div>
+          <div class="card-footer bg-transparent border-light">
+            <div class="text-left" style="float: left;"><button type="button" id="decrypt" class="btn btn-outline-primary btn-sm">entschlüsseln</button></div>
+            <div class="text-end"><button type="button" id="analyse" class="btn btn-outline-success btn-sm">&nbsp; analysieren &nbsp;</button></div>
+          </div>
+        </div>
+      </div>
+
+  </div>
+
+  <div id="analyseResult" style="margin-top: 1em";></div>
+
+</div>  
+
+
+<!-- Optional CSS and JavaScript from Bootstrap      -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+</body>
+</html>
